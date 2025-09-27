@@ -6,22 +6,34 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "prepare": "husky",
+    "lint:ci": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0 --rule 'no-console: error' --rule 'no-debugger: error' --rule 'unused-imports/no-unused-imports: error' --rule 'unused-imports/no-unused-vars: error'"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0 --rule 'no-console: error' --rule 'no-debugger: error' --rule 'unused-imports/no-unused-imports: error' --rule 'unused-imports/no-unused-vars: error' --rule 'jsx-a11y/click-events-have-key-events: error' --rule 'jsx-a11y/no-static-element-interactions: error' --rule 'jsx-a11y/no-noninteractive-element-interactions: error' --rule 'jsx-a11y/interactive-supports-focus: error' --rule 'jsx-a11y/no-noninteractive-tabindex: error' --rule 'react/jsx-no-target-blank: error' --rule '@next/next/no-img-element: error'",
+      "prettier --write"
+    ]
   },
   "dependencies": {
+    "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.4"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
-    "@eslint/eslintrc": "^3"
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-unused-imports": "^4.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.1",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
