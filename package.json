@@ -8,7 +8,7 @@
     "start": "next start",
     "prepare": "husky",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache",
-    "lint:ci": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0 --config eslint.ci.config.js",
+    "lint:ci": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0 --rule 'no-console: error' --rule 'no-debugger: error' --rule 'unused-imports/no-unused-imports: error' --rule 'unused-imports/no-unused-vars: error'",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
