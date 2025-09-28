@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js with caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Run ESLint (warnings = fail because of your config)
+      - name: Run ESLint
+        run: npm run lint
+
+      # 5. Run Prettier check
+      - name: Run Prettier check
+        run: npx prettier --check .
+
+      # 6. Build Next.js app
+      - name: Build Next.js app
+        run: npm run build
+
+      # 7. (Future) Run tests
+      # - name: Run tests
+      #   run: npm test

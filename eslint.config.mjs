@@ -1,14 +1,41 @@
 // eslint.config.js — Flat Config (clean & sane)
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import prettier from 'eslint-config-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({ baseDirectory: __dirname });
+
+const serverGuard = {
+  files: ['**/*.{js,jsx,ts,tsx}'],
+  rules: {
+    // Ban any function starting with "use" and a capital next char
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: 'CallExpression[callee.name=/^use[A-Z].*/]',
+        message:
+          'React Hooks are not allowed in Server Components. Move to a Client Component and add "use client".',
+      },
+      {
+        selector: 'JSXAttribute[name.name=/^on[A-Z].*/]',
+        message:
+          'DOM event handlers (onClick, onChange, ...) are not allowed in Server Components. Use a Client Component.',
+      },
+    ],
+  },
+};
+
+const clientAllow = {
+  files: ['**/*.client.{js,jsx,ts,tsx}'],
+  rules: {
+    'no-restricted-syntax': 'off',
+  },
+};
 
 const eslintConfig = [
   // Next + TS legacy presets via compat
@@ -27,8 +54,9 @@ const eslintConfig = [
     },
 
     plugins: { 'unused-imports': unusedImports },
-
+    linterOptions: { reportUnusedDisableDirectives: true },
     rules: {
+      'no-alert': 'warn',
       // Dev-friendly warnings in editor; pre-commit/CI me CLI se error banenge
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-debugger': 'warn',
@@ -65,7 +93,8 @@ const eslintConfig = [
       ],
     },
   },
-
+  serverGuard,
+  clientAllow, // keep this AFTER serverGuard so it overrides it
   // Put Prettier last to turn off conflicting stylistic rules
   prettier,
 ];
