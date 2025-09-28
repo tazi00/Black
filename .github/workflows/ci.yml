@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [main]
 
-# PRs pe latest run ko hi rakho, baaki cancel. time bachta hai.
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -31,22 +30,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Strict lint in CI. If you prefer softer, use `npm run lint`.
       - name: Run ESLint
         run: npm run lint:ci
 
       - name: Run Prettier check
         run: npx prettier --check .
 
-      # Optional but useful. Fails fast on TS errors even if build would tree-shake it away.
       - name: Type check
         run: npm run typecheck
 
-      # Next.js build (you’re using Turbopack flags in package.json already)
       - name: Build Next.js app
         run: npm run build
+        env:
+          NODE_ENV: production
+          DATABASE_PROVIDER: sqlite
+          DATABASE_URL: file:./dev.db
+          NEXT_TELEMETRY_DISABLED: '1'
 
-      # Cache .next between jobs (speeds up subsequent steps if you add tests/e2e later)
       - name: Cache Next build artifacts
         uses: actions/cache/save@v4
         if: success()
