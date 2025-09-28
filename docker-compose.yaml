@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      args: [DATABASE_PROVIDER=postgresql]
+    container_name: black-app
+    env_file: [.env.docker] # contains DATABASE_PROVIDER=postgresql
+    command: npm run dev
+    ports: ['3000:3000']
+    volumes:
+      - .:/usr/src/app # source mount for dev
+    depends_on: [db]
+
+  db:
+    image: postgres:16
+    container_name: black-db
+    restart: always
+    environment:
+      POSTGRES_USER: blackuser
+      POSTGRES_PASSWORD: blackpass
+      POSTGRES_DB: blackdb
+    ports: ['5432:5432']
+    volumes: ['db_data:/var/lib/postgresql/data']
+
+volumes:
+  db_data:

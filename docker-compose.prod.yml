@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      args: [DATABASE_PROVIDER=postgresql]
+    container_name: black-app
+    env_file: [.env.production]
+    command: npm start
+    ports:
+      - '3000:3000' # app ke liye bas 3000 rakho
+    volumes: [] # no bind mounts
+    depends_on: [db]
+
+  db:
+    image: postgres:16
+    container_name: black-db
+    restart: always
+    environment:
+      POSTGRES_USER: blackuser
+      POSTGRES_PASSWORD: blackpass
+      POSTGRES_DB: blackdb
+    ports:
+      - '5432:5432' # DB ko host pe expose karna zaruri hai
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

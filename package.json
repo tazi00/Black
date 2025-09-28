@@ -8,11 +8,16 @@
     "start": "next start",
     "prepare": "husky",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache",
-    "lint:ci": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0 --rule 'no-console: error' --rule 'no-debugger: error' --rule 'unused-imports/no-unused-imports: error' --rule 'unused-imports/no-unused-vars: error'",
+    "lint:ci": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0 --config eslint.ci.config.js",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate:sqlite": "dotenv -e .env.development -- npx drizzle-kit generate",
+    "db:push:sqlite": "dotenv -e .env.development -- npx drizzle-kit push",
+    "db:generate:pg": "dotenv -e .env.docker -- npx drizzle-kit generate",
+    "db:push:pg": "dotenv -e .env.docker -- npx drizzle-kit push",
+    "db:studio:pg": "dotenv -e .env.docker -- npx drizzle-kit studio"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -21,19 +26,30 @@
     ]
   },
   "dependencies": {
+    "better-sqlite3": "^12.4.1",
+    "dotenv": "^17.2.2",
+    "drizzle-kit": "^0.31.5",
+    "drizzle-orm": "^0.44.5",
     "next": "15.5.4",
+    "pg": "^8.16.3",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
+    "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-unused-imports": "^4.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.1",
